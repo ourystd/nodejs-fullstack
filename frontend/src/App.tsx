@@ -11,27 +11,6 @@ const router = createBrowserRouter([
   },
 ]);
 
-function Counter() {
-  const [count, setCount] = useState(0);
-
-  function incrementX() {
-    setCount(count + 1);
-    setCount(count + 1);
-  }
-
-  function incrementY() {
-    setCount((count) => count + 1);
-    setCount((count) => count + 1);
-  }
-
-  return (
-    <div>
-      <div>{incrementX()!}</div>
-      <div>{incrementY()!}</div>
-    </div>
-  );
-}
-
 function Home() {
   return (
     <div className="bg-slate-200 h-screen w-svw">
