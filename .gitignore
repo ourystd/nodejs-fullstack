@@ -1,15 +1,19 @@
+# System Files
+.DS_Store
+Thumbs.db
+
 ## Logs
 logs
 *.log
 npm-debug.log*
 
-## Dependency directories
-node_modules/
+# Build results
+node_modules
+build
+dist
 
-## Optional npm cache directory
+## cache
 .npm
-
-## Optional eslint cache
 .eslintcache
 
 ## Output of 'npm pack'
