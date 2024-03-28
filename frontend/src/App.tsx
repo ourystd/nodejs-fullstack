@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Navbar from "./components/navbar";
 import AuthContextProvider from "$modules/auth/auth-context";
 import RegisterPage from "$pages/register";
+import AccountVerificationPage from "$pages/verify-account";
 
 const router = createBrowserRouter([
   {
@@ -12,6 +13,10 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <RegisterPage />,
+  },
+  {
+    path: "/verify-account/:confirmationToken",
+    element: <AccountVerificationPage />,
   },
 ]);
 

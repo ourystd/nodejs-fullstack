@@ -158,14 +158,14 @@ const createTransporter = async () => {
     });
   }); */
 
-  const { token: accessToken, res } = await oauth2Client.getAccessToken();
+  // const { token: accessToken, res } = await oauth2Client.getAccessToken();
 
   const Transport = nodemailer.createTransport({
     service: "gmail",
     auth: {
       type: "OAuth2",
       user: GMAIL_EMAIL,
-      accessToken,
+      accessToken: process.env.OAUTH_ACCESS_TOKEN,
       clientId: OAUTH_CLIENT_ID,
       clientSecret: OAUTH_CLIENT_SECRET,
       refreshToken: OAUTH_REFRESH_TOKEN,
@@ -178,34 +178,40 @@ const createTransporter = async () => {
 const sendEmail = async ({ email, username, res }) => {
   // Create a unique confirmation token
   const confirmationToken = encrypt(username);
-  const apiUrl =
-    process.env.API_URL || `http://localhost:${process.env.PORT || 5000}`;
 
-  try {
-    // Initialize the Nodemailer with your Gmail credentials
-    const Transport = await createTransporter();
+  const defaultVerifURL = `http://localhost:${
+    process.env.FRONT_PORT || 5000
+  }/verify-account`;
 
-    // Configure the email options
-    const mailOptions = {
-      from: "Educative Fullstack Course",
-      to: email,
-      subject: "Email Confirmation",
-      html: `Press the following link to verify your email: <a href=${apiUrl}/api/v1/verify/${confirmationToken}>Verification Link</a>`,
-    };
+  const verificationURL =
+    process.env.VERIFY_ACCOUNT_FRONT_URL || defaultVerifURL;
 
-    // Send the email
-    Transport.sendMail(mailOptions, function (error, response) {
-      if (error) {
-        res.status(400).send(error);
-      } else {
-        res.status(201).json({
-          message: "Account created successfully, please verify your email.",
-        });
-      }
-    });
-  } catch (error) {
-    // console.error({ emailERROR: error });
-    console.error("emailERROR");
-    res.status(500).json({ message: "Something went wrong" });
-  }
+  // Initialize the Nodemailer with your Gmail credentials
+  /* const Transport = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: GMAIL_EMAIL,
+      pass: process.env.GMAIL_PASSWORD,
+    },
+  }); */
+  const Transport = await createTransporter();
+
+  // Configure the email options
+  const mailOptions = {
+    from: "Educative Fullstack NodeJS Course",
+    to: email,
+    subject: "Email Confirmation",
+    html: `Press the following link to verify your email: <a href=${verificationURL}/${confirmationToken}>Verification Link</a>`,
+  };
+
+  // Send the email
+  Transport.sendMail(mailOptions, function (error, response) {
+    if (error) {
+      res.status(400).send(error);
+    } else {
+      res.status(201).json({
+        message: "Account created successfully, please verify your email.",
+      });
+    }
+  });
 };

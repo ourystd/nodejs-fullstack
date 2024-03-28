@@ -1,9 +1,11 @@
 require("./database").connect();
 const express = require("express");
 const app = express();
+const cors = require("cors");
 const userRouter = require("./routes/users");
 const auth = require("./middleware/auth");
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

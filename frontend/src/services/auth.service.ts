@@ -1,9 +1,10 @@
-import { create } from "apisauce"; // HTTP Client
+import { ApiOkResponse, create } from "apisauce";
+import { on } from "events";
 
-const API_URL = "http://localhost:5000/api/v1"; // The API endpoint to communicate with the server
+const baseURL = import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1";
 
-const apiClient = create({
-  baseURL: API_URL,
+const httpClient = create({
+  baseURL,
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
@@ -24,7 +25,7 @@ type TUser = {
 };
 
 const register = async (userInfos: TUser) => {
-  return apiClient.post(`/signup`, userInfos);
+  return httpClient.post(`/signup`, userInfos);
 };
 
 /**
@@ -36,7 +37,7 @@ type TCredentials = {
   password: string;
 };
 const login = async (credentials: TCredentials) => {
-  return apiClient.post(`/login`, credentials).then((res) => {
+  return httpClient.post(`/login`, credentials).then((res) => {
     /**
      * If successfully logged in, store the user data, including the token, in the localStorage
      */
@@ -62,11 +63,22 @@ const getCurrentUser = (): User => {
   return userData ? JSON.parse(userData) : null;
 };
 
+/**
+ * Handles the verify email request.
+ */
+type TData = {
+  message: string;
+};
+const verifyAccount = (confirmationToken: string) => {
+  return httpClient.get<TData>(`/verify/${confirmationToken}`);
+};
+
 const AuthService = {
   register,
   login,
   logout,
   getCurrentUser,
+  verify: verifyAccount,
 };
 
 export default AuthService;
