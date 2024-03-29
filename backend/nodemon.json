@@ -1,0 +1,7 @@
+{
+  "verbose": true,
+  "watch": ["*.*", ".env"],
+  "env": {
+    "NODE_ENV": "development"
+  }
+}
