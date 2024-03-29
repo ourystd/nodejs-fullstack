@@ -1,14 +1,14 @@
-import "./App.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Navbar from "./components/navbar";
-import AuthContextProvider from "$modules/auth/auth-context";
+import AuthContextProvider from "$modules/auth/auth-context-provider";
+import HomePage from "$pages/home";
+import LoginPage from "$pages/login";
 import RegisterPage from "$pages/register";
 import AccountVerificationPage from "$pages/verify-account";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home />,
+    element: <HomePage />,
   },
   {
     path: "/register",
@@ -18,15 +18,11 @@ const router = createBrowserRouter([
     path: "/verify-account/:confirmationToken",
     element: <AccountVerificationPage />,
   },
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
 ]);
-
-function Home() {
-  return (
-    <div className="bg-slate-200 h-screen w-svw">
-      <Navbar />
-    </div>
-  );
-}
 
 function App() {
   return (

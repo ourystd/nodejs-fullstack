@@ -1,9 +1,9 @@
-import RegisterForm from "$modules/auth/register-form";
+import LoginForm from "$modules/auth/login-form";
 import logo from "$assets/react.svg";
 import { GestPageOnly } from "$modules/auth/guest-page-only";
 import Navbar from "$components/navbar";
 
-const RegisterPage = () => {
+const LoginPage = () => {
   return (
     <GestPageOnly>
       <div className="bg-slate-200 min-h-screen">
@@ -13,10 +13,10 @@ const RegisterPage = () => {
             <div>
               <img className="mx-auto h-12 w-auto" src={logo} alt="Workflow" />
               <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                Create a new account
+                Log in to your account
               </h2>
             </div>
-            <RegisterForm />
+            <LoginForm />
           </div>
         </div>
       </div>
@@ -24,4 +24,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
+export default LoginPage;

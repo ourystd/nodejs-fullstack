@@ -11,12 +11,20 @@ const httpClient = create({
   },
 });
 
+const sleep = (ms = 500) => new Promise((resolve) => setTimeout(resolve, ms));
+
+httpClient.addAsyncRequestTransform(async () => {
+  console.log("wait");
+  await sleep(3000);
+  console.log("done");
+});
+
 /**
  * Handles the signup HTTP request to add a new user to the database
  * The data needed for each user is First Name, Last Name, Username, Email, and Password
  */
 
-type TUser = {
+type TUserInfos = {
   firstName: string;
   lastName: string;
   username: string;
@@ -24,8 +32,22 @@ type TUser = {
   password: string;
 };
 
-const register = async (userInfos: TUser) => {
-  return httpClient.post(`/signup`, userInfos);
+const register = async (userInfos: TUserInfos) => {
+  const res = await httpClient.post<{ message: string }, { message: string }>(
+    `/signup`,
+    userInfos
+  );
+
+  if (!res.ok) {
+    throw new Error(
+      res.data?.message || `An error occured: ${res.originalError}`
+    );
+  }
+
+  return (
+    res.data?.message ||
+    "Your account has been created successfully. Please verify your email inbox to verify your account."
+  );
 };
 
 /**
@@ -36,29 +58,35 @@ type TCredentials = {
   emailOrUsername: string;
   password: string;
 };
+
+type TUser = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+  isVerified: boolean;
+  token: string;
+};
+
 const login = async (credentials: TCredentials) => {
-  return httpClient.post(`/login`, credentials).then((res) => {
-    /**
-     * If successfully logged in, store the user data, including the token, in the localStorage
-     */
-    localStorage.setItem("user", JSON.stringify(res.data));
-    return res.data;
-  });
+  const res = await httpClient.post<TUser, { message: string }>(
+    `/login`,
+    credentials
+  );
+
+  if (!res.ok) {
+    throw new Error(res.data?.message);
+  }
+
+  return res.data;
 };
 
 const logout = () => {
   localStorage.removeItem("user");
 };
 
-type User = {
-  firstName: string;
-  lastName: string;
-  username: string;
-  email: string;
-  token: string;
-} | null;
-
-const getCurrentUser = (): User => {
+const getCurrentUser = (): TUser | null => {
   const userData = localStorage.getItem("user");
   return userData ? JSON.parse(userData) : null;
 };

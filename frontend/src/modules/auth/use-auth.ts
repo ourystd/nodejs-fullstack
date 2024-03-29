@@ -1,9 +1,10 @@
 import * as React from "react";
-import { AuthContext, AuthState, User } from "./auth-context";
+import { AuthContext } from "./auth-context";
+import type { TAuthState, TUser } from "./context.types";
 
 const useAuth = (): {
-  state: AuthState;
-  login: (payload: { user: User; token: string }) => void;
+  state: TAuthState;
+  login: (payload: { user: TUser; token: string }) => void;
   logout: () => void;
 } => {
   const context = React.useContext(AuthContext);
