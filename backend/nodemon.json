@@ -1,6 +1,7 @@
 {
   "verbose": true,
   "watch": ["*.*", ".env"],
+  "ignore": ["./uploads"],
   "env": {
     "NODE_ENV": "development"
   }

@@ -6,6 +6,8 @@ const app = express();
 const cors = require("cors");
 const userRouter = require("./routes/users");
 const auth = require("./middleware/auth");
+const { upload } = require("./middleware/multer");
+const fileController = require("./controllers/file");
 
 // Define custom format for logging
 morgan.token("requestLog", (req, res) => {
@@ -40,8 +42,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/v1", userRouter);
+app.use("/uploads", express.static("./uploads"));
 
+app.use("/api/v1", userRouter);
+app.post("/api/v1/upload", auth, upload.single("file"), fileController.upload);
 app.post("/api/v1/hello", auth, (req, res) => {
   res.status(200).send("Hello 🙌 ");
 });
