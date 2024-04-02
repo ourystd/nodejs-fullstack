@@ -40,6 +40,8 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
 
   const logout = React.useCallback(() => {
     dispatch({ type: "LOGOUT" });
+    localStorage.removeItem("user");
+    localStorage.removeItem("access_token");
   }, []);
 
   const login = React.useCallback((payload: { user: TUser; token: string }) => {
