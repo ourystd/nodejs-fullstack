@@ -6,49 +6,57 @@ import { NavLink } from "react-router-dom";
 import logo from "../assets/react.svg";
 
 type ActionsProps = {
-  style: string;
+  style?: string;
 };
 
-const Actions = ({ style }: ActionsProps) => {
+const navLinks = [
+  {
+    name: "Login",
+    url: "/login",
+  },
+  {
+    name: "Register",
+    url: "/register",
+  },
+  {
+    name: "Profile",
+    url: "/profile",
+  },
+];
+
+const Actions = ({
+  style = "px-3 py-2 rounded-md text-sm font-medium",
+}: ActionsProps) => {
   const { logout, state } = useAuth();
   return (
     <>
       {state.isAuthenticated ? (
-        <button type="button" className={style} onClick={logout}>
+        <button
+          type="button"
+          className={style + " hover:bg-white hover:bg-opacity-10 text-white"}
+          onClick={logout}
+        >
           Logout
         </button>
       ) : (
         <ul className="flex items-center gap-x-2">
-          <li>
-            <NavLink
-              to="/login"
-              className={({ isActive }) =>
-                [
-                  style,
-                  isActive
-                    ? "text-indigo-700 bg-slate-50 hover:bg-slate-300 hover:bg-opacity-100"
-                    : "",
-                ].join(" ")
-              }
-            >
-              Login
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/register"
-              className={({ isActive }) =>
-                [
-                  style,
-                  isActive
-                    ? "text-indigo-700 bg-slate-50 hover:bg-slate-300 hover:bg-opacity-100"
-                    : "",
-                ].join(" ")
-              }
-            >
-              Register
-            </NavLink>
-          </li>
+          {navLinks.map((link) => (
+            <li key={link.url}>
+              <NavLink
+                to={link.url}
+                className={({ isActive }) =>
+                  [
+                    "px-3 py-2 rounded-md text-sm font-medium",
+                    isActive
+                      ? "text-indigo-700 bg-slate-50 hover:bg-slate-50"
+                      : "hover:bg-white hover:bg-opacity-10 text-white",
+                  ].join(" ")
+                }
+              >
+                {link.name}
+              </NavLink>
+            </li>
+          ))}
         </ul>
       )}
     </>
@@ -66,7 +74,7 @@ const Navbar = () => {
       <nav>
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <Actions style="hover:bg-white hover:bg-opacity-10 text-white px-3 py-2 rounded-md text-sm font-medium" />
+            <Actions />
           </div>
           <div className="-mr-2 flex md:hidden">
             <button
@@ -126,7 +134,7 @@ const Navbar = () => {
           {(ref) => (
             <div className="md:hidden" id="mobile-menu">
               <div ref={ref} className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <Actions style="hover:bg-gray-700 text-white px-3 py-2 rounded-md text-sm font-medium" />
+                <Actions />
               </div>
             </div>
           )}
