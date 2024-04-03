@@ -46,6 +46,19 @@ const processImage = async (path) => {
     const imgInstnace = sharp(path);
     const metadata = await imgInstnace.metadata();
     console.log({ metadata });
+
+    const newPath = path.split(".")[0] + "-img.jpeg";
+    imgInstnace
+      .resize({
+        width: 350,
+        fit: sharp.fit.contain,
+      })
+      .toFormat("jpeg", { mozjpeg: true })
+      .blur(1)
+      .composite([{ input: "uploads/logo.png", gravity: "center" }])
+      .toFile(newPath);
+
+    return newPath;
   } catch (error) {
     console.log(
       `An error occurred during processing the uploaded image: ${error}`
