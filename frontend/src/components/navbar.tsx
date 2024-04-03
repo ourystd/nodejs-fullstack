@@ -18,10 +18,6 @@ const navLinks = [
     name: "Register",
     url: "/register",
   },
-  {
-    name: "Profile",
-    url: "/profile",
-  },
 ];
 
 const Actions = ({
@@ -31,13 +27,28 @@ const Actions = ({
   return (
     <>
       {state.isAuthenticated ? (
-        <button
-          type="button"
-          className={style + " hover:bg-white hover:bg-opacity-10 text-white"}
-          onClick={logout}
-        >
-          Logout
-        </button>
+        <div className="flex items-center gap-x-2">
+          <button
+            type="button"
+            className={style + " hover:bg-white hover:bg-opacity-10 text-white"}
+            onClick={logout}
+          >
+            Logout
+          </button>
+          <NavLink
+            to="/profile"
+            className={({ isActive }) =>
+              [
+                "px-3 py-2 rounded-md text-sm font-medium",
+                isActive
+                  ? "text-indigo-700 bg-slate-50 hover:bg-slate-50"
+                  : "hover:bg-white hover:bg-opacity-10 text-white",
+              ].join(" ")
+            }
+          >
+            Profile
+          </NavLink>
+        </div>
       ) : (
         <ul className="flex items-center gap-x-2">
           {navLinks.map((link) => (
