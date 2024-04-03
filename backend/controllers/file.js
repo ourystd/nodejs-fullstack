@@ -3,6 +3,7 @@ const fs = require("fs");
 const readline = require("readline");
 const SpellChecker = require("simple-spellchecker").getDictionarySync("en-GB");
 const stringSimilarity = require("string-similarity");
+const sharp = require("sharp");
 
 const spellCheck = async (path) => {
   const readInterface = readline.createInterface({
@@ -40,6 +41,18 @@ const spellCheck = async (path) => {
   });
 };
 
+const processImage = async (path) => {
+  try {
+    const imgInstnace = sharp(path);
+    const metadata = await imgInstnace.metadata();
+    console.log({ metadata });
+  } catch (error) {
+    console.log(
+      `An error occurred during processing the uploaded image: ${error}`
+    );
+  }
+};
+
 exports.upload = async (req, res) => {
   try {
     const { error } = validateFile(req.body);
@@ -54,6 +67,10 @@ exports.upload = async (req, res) => {
 
     if (req.file.mimetype === "text/plain") {
       spellCheck(req.file.path);
+    }
+
+    if (req.file.mimetype.match(/^image/)) {
+      await processImage(req.file.path);
     }
 
     const { name, description } = req.body;
