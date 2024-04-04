@@ -4,6 +4,7 @@ const readline = require("readline");
 const SpellChecker = require("simple-spellchecker").getDictionarySync("en-GB");
 const stringSimilarity = require("string-similarity");
 const sharp = require("sharp");
+const Joi = require("joi");
 
 const spellCheck = async (path) => {
   const readInterface = readline.createInterface({
@@ -106,5 +107,139 @@ exports.upload = async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.status(400).send(err.message);
+  }
+};
+
+exports.getAll = async (req, res) => {
+  try {
+    const { user_id } = req.user;
+
+    const filters = {
+      ...(user_id && { createdBy: user_id }),
+      ...(req.query.name && { name: /req.query.name/ }),
+      ...(req.query.description && { description: /req.query.description/ }),
+      ...(req.query.createdAt && { createdAt: req.query.createdAt }),
+    };
+
+    console.log({ filters });
+
+    const allFiles = await FileModel.find(filters);
+    res
+      .status(200)
+      .json({ message: "Files retrieved successfully", data: allFiles });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: err.message });
+  }
+};
+
+const validateGetFileParams = (params) => {
+  const schema = Joi.object({
+    fileId: Joi.string().uuid().required(),
+  });
+  return schema.validate(params);
+};
+
+exports.getSingleFile = async (req, res) => {
+  try {
+    /* const { error } = validateGetFileParams(req.params);
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+    } */
+    const { fileId } = req.params;
+    const ownerID = req.user?.user_id;
+
+    console.log({ fileId, ownerID });
+
+    if (!fileId) {
+      return res
+        .status(404)
+        .json({ message: "The requested file does not exist 1" });
+    }
+
+    if (!ownerID) {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    const file = await FileModel.findOne({
+      _id: fileId,
+      createdBy: ownerID,
+    });
+
+    if (!file) {
+      return res
+        .status(404)
+        .json({ message: "The requested file does not exist 2" });
+    }
+
+    res
+      .status(200)
+      .json({ message: "File retrieved successfully", data: file });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: err.message });
+  }
+};
+
+exports.updateFile = async (req, res) => {
+  try {
+    const { fileId } = req.params;
+    const { name, description } = req.body;
+
+    if (!name || !description) {
+      return res
+        .status(400)
+        .json({ message: "File's name and description are required" });
+    }
+
+    const result = await FileModel.validateAsync({ name, description });
+    const file = await FileModel.findOne({ _id: fileId });
+
+    if (!file) {
+      return res
+        .status(404)
+        .json({ message: "The requested file does not exist" });
+    }
+
+    const updatedFile = await FileModel.update(
+      {
+        _id: fileId,
+      },
+      {
+        $set: result,
+      },
+      { upsert: true }
+    );
+
+    res
+      .status(200)
+      .json({ message: "File updated successfully", data: updatedFile });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: err.message });
+  }
+};
+
+exports.deleteFile = async (req, res) => {
+  try {
+    const { fileId } = req.params;
+    const file = await FileModel.findOne({
+      _id: fileId,
+    });
+
+    if (!file) {
+      return res
+        .status(404)
+        .json({ message: "The requested file does not exist" });
+    }
+
+    await FileModel.deleteOne({
+      _id: fileId,
+    });
+
+    res.status(200).json({ message: "File deleted successfully" });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send(err.message);
   }
 };

@@ -1,5 +1,4 @@
-import { ApiOkResponse, create } from "apisauce";
-import { on } from "events";
+import { create } from "apisauce";
 
 const baseURL = import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1";
 
@@ -34,7 +33,7 @@ type TUserInfos = {
 
 const register = async (userInfos: TUserInfos) => {
   const res = await httpClient.post<{ message: string }, { message: string }>(
-    `/signup`,
+    `/users/signup`,
     userInfos
   );
 
@@ -71,7 +70,7 @@ type TUser = {
 
 const login = async (credentials: TCredentials) => {
   const res = await httpClient.post<TUser, { message: string }>(
-    `/login`,
+    `/users/login`,
     credentials
   );
 
@@ -98,7 +97,7 @@ type TData = {
   message: string;
 };
 const verifyAccount = (confirmationToken: string) => {
-  return httpClient.get<TData>(`/verify/${confirmationToken}`);
+  return httpClient.get<TData>(`/users/verify/${confirmationToken}`);
 };
 
 const AuthService = {

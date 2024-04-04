@@ -7,7 +7,7 @@ const verify = (req, res, next) => {
 
   if (!token) {
     // If the token is not represented in any method, return an error
-    return res.status(403).send("A token is required for authentication");
+    return res.status(401).json({ message: "Unauthorized" });
   }
   try {
     // decode the token, using the TOKEN_SECRET_KEY that we used to encode it, to get the user data
@@ -15,7 +15,7 @@ const verify = (req, res, next) => {
     req.user = decoded;
   } catch (err) {
     // In case of failing to detect the token
-    return res.status(401).send("Invalid Token");
+    return res.status(401).json({ message: "Unauthorized" });
   }
   // This is useful if you have much middleware, the next() function passes the request to the next middleware
   return next();

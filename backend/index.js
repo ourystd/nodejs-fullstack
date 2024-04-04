@@ -1,13 +1,10 @@
 require("./database").connect();
 const express = require("express");
 const morgan = require("morgan");
-
 const app = express();
 const cors = require("cors");
 const userRouter = require("./routes/users");
-const auth = require("./middleware/auth");
-const { upload } = require("./middleware/multer");
-const fileController = require("./controllers/file");
+const filesRouter = require("./routes/file");
 
 // Define custom format for logging
 morgan.token("requestLog", (req, res) => {
@@ -44,11 +41,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/uploads", express.static("./uploads"));
 
-app.use("/api/v1", userRouter);
-app.post("/api/v1/upload", auth, upload.single("file"), fileController.upload);
-app.post("/api/v1/hello", auth, (req, res) => {
-  res.status(200).send("Hello 🙌 ");
-});
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/files", filesRouter);
 
 const port = process.env.API_PORT || 5000;
 app.listen(port, () => {
