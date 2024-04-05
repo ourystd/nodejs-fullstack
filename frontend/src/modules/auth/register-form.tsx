@@ -48,7 +48,7 @@ const RegisterForm = () => {
       const msg = err instanceof Error ? err.message : "An error occured";
       setAlertState({
         show: true,
-        type: "danger",
+        type: "error",
         msg,
       });
     }

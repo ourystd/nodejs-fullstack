@@ -56,7 +56,7 @@ const processImage = async (path) => {
       })
       .toFormat("jpeg", { mozjpeg: true })
       .blur(1)
-      .composite([{ input: "uploads/logo.png", gravity: "center" }])
+      // .composite([{ input: "uploads/logo.png", gravity: "center" }])
       .toFile(newPath);
 
     return newPath;
@@ -100,10 +100,7 @@ exports.upload = async (req, res) => {
       path: "/" + path,
     });
 
-    res.status(200).json({
-      message: "File uploaded successfully",
-      data: serializeFile(file),
-    });
+    res.status(200).json(serializeFile(file, { exclude: ["createdBy"] }));
   } catch (err) {
     console.log(err);
     return res.status(400).send(err.message);

@@ -1,27 +1,4 @@
-import { create } from "apisauce";
-
-const baseURL = import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1";
-
-const httpClient = create({
-  baseURL,
-  headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-  },
-});
-
-const sleep = (ms = 500) => new Promise((resolve) => setTimeout(resolve, ms));
-
-httpClient.addAsyncRequestTransform(async () => {
-  console.log("wait");
-  await sleep(3000);
-  console.log("done");
-});
-
-/**
- * Handles the signup HTTP request to add a new user to the database
- * The data needed for each user is First Name, Last Name, Username, Email, and Password
- */
+import { httpClient } from "./http-client";
 
 type TUserInfos = {
   firstName: string;
@@ -31,6 +8,10 @@ type TUserInfos = {
   password: string;
 };
 
+/**
+ * Handles the signup HTTP request to add a new user to the database
+ * The data needed for each user is First Name, Last Name, Username, Email, and Password
+ */
 const register = async (userInfos: TUserInfos) => {
   const res = await httpClient.post<{ message: string }, { message: string }>(
     `/users/signup`,

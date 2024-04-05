@@ -35,7 +35,7 @@ const AccountVerificationPage = () => {
         .catch((err) => {
           setAlertState({
             show: true,
-            type: "danger",
+            type: "error",
             msg: "Failed to verify your email",
           });
           setProcessing(false);
