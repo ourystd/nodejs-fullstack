@@ -1,18 +1,19 @@
-import userService, { TCreatedFile } from "$services/user.service";
+import filesService from "$modules/files/files.service";
 import * as React from "react";
 import FileCard from "./file-card";
 import Loader from "$components/loader";
+import { TFile } from "./types";
 
 type TStatus = "idle" | "loading" | "success" | "error";
 
 type TAction =
-  | { type: "SET_DATA"; payload: TCreatedFile[] }
+  | { type: "SET_DATA"; payload: TFile[] }
   | { type: "LOADING" }
   | { type: "ERROR"; payload: string }
   | { type: "RESET" };
 
 type TState = {
-  data: TCreatedFile[];
+  data: TFile[];
   status: TStatus;
   error?: string;
 };
@@ -46,7 +47,7 @@ export default function FileList() {
   const fetchFiles = React.useCallback(async () => {
     dispatch({ type: "LOADING" });
     try {
-      const files = await userService.getFiles();
+      const files = await filesService.getFiles();
       dispatch({ type: "SET_DATA", payload: files });
     } catch (error) {
       dispatch({

@@ -1,7 +1,7 @@
 import Alert, { TAlertTypes } from "$components/alert";
 import Loader from "$components/loader";
 import Navbar from "$components/navbar";
-import userService from "$services/user.service";
+import filesService from "$modules/files/files.service";
 import * as React from "react";
 
 type TAlertState = {
@@ -37,7 +37,7 @@ export default function UploadFilePage() {
     formData.append("name", file.name);
 
     try {
-      const uploadedFile = await userService.uploadFile(formData);
+      const uploadedFile = await filesService.uploadFile(formData);
       console.log({ uploadedFile });
 
       setAlertState({
