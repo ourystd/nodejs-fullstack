@@ -1,12 +1,11 @@
 import clsx from "clsx";
-import React from "react";
 
 export type TAlertTypes = "success" | "error" | "warning" | "info" | "default";
 
 type TAlertProps = {
   type: TAlertTypes;
   msg: string;
-  onClose?: () => void;
+  onClose: () => void;
 };
 
 const bgColorMap = {
@@ -18,13 +17,6 @@ const bgColorMap = {
 };
 
 const Alert = ({ type = "default", msg, onClose }: TAlertProps) => {
-  const [showAlert, setShowAlert] = React.useState(true);
-
-  if (!showAlert) {
-    onClose && onClose();
-    return null;
-  }
-
   const bgColor = bgColorMap[type];
 
   return (
@@ -37,7 +29,9 @@ const Alert = ({ type = "default", msg, onClose }: TAlertProps) => {
       <span className="inline-block align-middle mr-8 text-current">{msg}</span>
       <button
         className="absolute bg-transparent text-2xl font-semibold leading-none right-0 top-0 mt-4 mr-6 outline-none focus:outline-none"
-        onClick={() => setShowAlert(false)}
+        onClick={() => {
+          onClose();
+        }}
       >
         <span>×</span>
       </button>

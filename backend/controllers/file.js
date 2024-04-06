@@ -121,9 +121,8 @@ exports.getAll = async (req, res) => {
     console.log({ filters });
 
     const allFiles = await FileModel.find(filters);
-    res
-      .status(200)
-      .json({ message: "Files retrieved successfully", data: allFiles });
+    // res.status(404).json({ message: "No files found" });
+    res.status(200).json(allFiles.map(serializeFile));
   } catch (err) {
     console.log(err);
     return res.status(500).json({ message: err.message });

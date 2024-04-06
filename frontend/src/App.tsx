@@ -1,5 +1,6 @@
 import AuthContextProvider from "$modules/auth/auth-context-provider";
 import { RequireAuthPage } from "$modules/auth/reuire-auth-page";
+import FilesListPage from "$pages/files";
 import HomePage from "$pages/home";
 import LoginPage from "$pages/login";
 import RegisterPage from "$pages/register";
@@ -17,6 +18,14 @@ const router = createBrowserRouter([
     element: (
       <RequireAuthPage>
         <UploadFilePage />
+      </RequireAuthPage>
+    ),
+  },
+  {
+    path: "/files",
+    element: (
+      <RequireAuthPage>
+        <FilesListPage />
       </RequireAuthPage>
     ),
   },

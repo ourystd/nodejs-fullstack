@@ -71,7 +71,9 @@ export default function UploadFilePage() {
           <Alert
             type={alertState.type}
             msg={alertState.msg}
-            onClose={() => setAlertState({ ...alertState, show: false })}
+            onClose={() =>
+              setAlertState((alertState) => ({ ...alertState, show: false }))
+            }
           />
         )}
 

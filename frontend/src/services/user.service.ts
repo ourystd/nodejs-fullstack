@@ -1,12 +1,6 @@
 import { authHttpClient } from "./http-client";
 
-type TFile = {
-  name: string;
-  description: string;
-  file: File;
-};
-
-type TCreatedFile = {
+export type TCreatedFile = {
   id: string;
   name: string;
   description: string;
@@ -35,4 +29,15 @@ const uploadFile = async (formData: FormData) => {
   return res.data;
 };
 
-export default { uploadFile };
+const getFiles = async () => {
+  const res = await authHttpClient.get<TCreatedFile[], ErrorRes>(`/files`);
+  if (!res.ok) {
+    throw new Error(res.data?.message);
+  }
+  if (!res.data) {
+    return [];
+  }
+  return res.data;
+};
+
+export default { uploadFile, getFiles };

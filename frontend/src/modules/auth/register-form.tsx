@@ -59,7 +59,13 @@ const RegisterForm = () => {
     <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
       {alertState.show ? (
         <div className="flex justify-center">
-          <Alert type={alertState.type} msg={alertState.msg} />
+          <Alert
+            type={alertState.type}
+            msg={alertState.msg}
+            onClose={() =>
+              setAlertState((state) => ({ ...state, show: false }))
+            }
+          />
         </div>
       ) : null}
 

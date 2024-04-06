@@ -58,7 +58,13 @@ const AccountVerificationPage = () => {
     return (
       <div className="flex h-screen">
         <div className="m-auto">
-          <Alert type={alertState.type} msg={alertState.msg} />
+          <Alert
+            type={alertState.type}
+            msg={alertState.msg}
+            onClose={() =>
+              setAlertState((alertState) => ({ ...alertState, show: false }))
+            }
+          />
         </div>
       </div>
     );
