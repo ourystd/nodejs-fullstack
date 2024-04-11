@@ -168,9 +168,7 @@ exports.getSingleFile = async (req, res) => {
         .json({ message: "The requested file does not exist 2" });
     }
 
-    res
-      .status(200)
-      .json({ message: "File retrieved successfully", data: file });
+    res.status(200).json(serializeFile(file));
   } catch (err) {
     console.log(err);
     return res.status(500).json({ message: err.message });
@@ -188,7 +186,7 @@ exports.updateFile = async (req, res) => {
         .json({ message: "File's name and description are required" });
     }
 
-    const result = await FileModel.validateAsync({ name, description });
+    await FileModel.validate({ name, description }, ["name", "description"]);
     const file = await FileModel.findOne({ _id: fileId });
 
     if (!file) {
@@ -197,19 +195,20 @@ exports.updateFile = async (req, res) => {
         .json({ message: "The requested file does not exist" });
     }
 
-    const updatedFile = await FileModel.update(
+    const updatedFile = await FileModel.updateOne(
       {
         _id: fileId,
       },
       {
-        $set: result,
+        $set: {
+          name,
+          description,
+        },
       },
       { upsert: true }
     );
 
-    res
-      .status(200)
-      .json({ message: "File updated successfully", data: updatedFile });
+    res.status(200).json(serializeFile(updatedFile));
   } catch (err) {
     console.log(err);
     return res.status(500).json({ message: err.message });

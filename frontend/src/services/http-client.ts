@@ -34,4 +34,5 @@ authHttpClient.addAsyncRequestTransform(async () => {
   console.log("done");
 });
 
-export { httpClient, authHttpClient };
+export { authHttpClient, httpClient };
+

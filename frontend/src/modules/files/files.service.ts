@@ -28,4 +28,32 @@ const getFiles = async () => {
   return res.data;
 };
 
-export default { uploadFile, getFiles };
+
+const updateFile = async (file: {
+  id: string;
+  name?: string;
+  description?: string;
+}) => {
+  const updatedFile = {
+    ...(file.name && { name: file.name }),
+    ...(file.description && { description: file.description }),
+  };
+  const res = await authHttpClient.patch<TFile, ErrorRes>(
+    `/files/${file.id}`,
+    updatedFile
+  );
+  if (!res.ok) {
+    throw new Error(res.data?.message);
+  }
+  return res.data;
+};
+
+const getFile = async (id: string) => {
+  const res = await authHttpClient.get<TFile, ErrorRes>(`/files/${id}`);
+  if (!res.ok) {
+    throw new Error(res.data?.message);
+  }
+  return res.data || null;
+};
+
+export default { uploadFile, getFiles, getFile, updateFile };

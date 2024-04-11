@@ -1,6 +1,7 @@
 import * as React from "react";
 import type { TAction, TAuthState, TUser } from "./context.types";
 import { AuthContext } from "./auth-context";
+import { authHttpClient } from "$services/http-client";
 
 const initialState: TAuthState = {
   isAuthenticated: false,
@@ -29,9 +30,9 @@ const reducer = (state: TAuthState, action: TAction): TAuthState => {
   }
 };
 
-interface AuthContextProviderProps {
+type AuthContextProviderProps = {
   children: React.ReactNode;
-}
+};
 
 const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
   children,
@@ -62,9 +63,16 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
     }
   }, []);
 
-  return (
-    <AuthContext.Provider value={value}> {children} </AuthContext.Provider>
-  );
+  React.useEffect(() => {
+    authHttpClient.addResponseTransform((response) => {
+      if (response.status === 401) {
+        console.log("Unauthorized");
+        logout();
+      }
+    });
+  }, [logout]);
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export default AuthContextProvider;

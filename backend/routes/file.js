@@ -14,7 +14,7 @@ router
 router
   .route("/:fileId")
   .get(auth, fileController.getSingleFile)
-  .put(auth, fileController.updateFile)
+  .patch(auth, fileController.updateFile)
   .delete(auth, fileController.deleteFile);
 
 module.exports = router;

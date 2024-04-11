@@ -1,8 +1,5 @@
-type TFile = {
-  name: string;
-  description: string;
-  path: string;
-};
+import { Link } from "react-router-dom";
+import { TFile } from "./types";
 
 const FileCard = ({ file }: { file: TFile }) => {
   return (
@@ -17,7 +14,14 @@ const FileCard = ({ file }: { file: TFile }) => {
           sandbox="allow-scripts allow-same-origin"
         />
         <div className="px-6 py-4">
-          <div className="font-bold text-xl mb-2">{file.name}</div>
+          <div className="font-bold text-xl mb-2">
+            <Link
+              to={`/files/${file.id}`}
+              className="hover:underline hover:text-blue-500"
+            >
+              {file.name}
+            </Link>
+          </div>
           <p className="text-gray-700 text-base">{file.description}</p>
         </div>
       </div>
