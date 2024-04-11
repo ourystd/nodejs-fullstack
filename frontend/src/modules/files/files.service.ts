@@ -56,4 +56,14 @@ const getFile = async (id: string) => {
   return res.data || null;
 };
 
-export default { uploadFile, getFiles, getFile, updateFile };
+const deleteFile = async (id: string) => {
+  const res = await authHttpClient.delete<{ message: string }, ErrorRes>(
+    `/files/${id}`
+  );
+  if (!res.ok) {
+    throw new Error(res.data?.message);
+  }
+  return res.data || null;
+};
+
+export default { uploadFile, getFiles, getFile, updateFile, deleteFile };

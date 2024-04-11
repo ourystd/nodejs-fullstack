@@ -80,7 +80,7 @@ export default function FileList() {
     );
   }
 
-  if (status === "loading") {
+  if (status === "loading" && files.length === 0) {
     return (
       <div className="flex justify-center w-full py-10">
         <Loader />
@@ -90,8 +90,16 @@ export default function FileList() {
 
   return (
     <div className="pt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      {files.length === 0 && (
+        <p className="text-center font-semibold">No files found</p>
+      )}
+      {status === "loading" && (
+        <div className="flex justify-center absolute left-0 right-0">
+          <Loader />
+        </div>
+      )}
       {files.map((file) => (
-        <FileCard key={file.id} file={file} />
+        <FileCard key={file.id} file={file} onDelete={fetchFiles} />
       ))}
     </div>
   );
